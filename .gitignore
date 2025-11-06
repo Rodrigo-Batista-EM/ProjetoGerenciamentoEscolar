@@ -1,0 +1,48 @@
+# Banco de dados Firebird - NÃO SUBIR
+*.fdb
+*.FDB
+*.gdb
+*.GDB
+
+# Arquivos de compilação do .NET
+bin/
+obj/
+
+# Arquivos do Visual Studio
+.vs/
+*.user
+*.suo
+*.cache
+*.vshost.*
+*.userosscache
+*.sln.docstates
+
+# Arquivos do Visual Studio específicos do seu projeto
+*.opendb
+*.dbmdl
+*.sqlite
+*.vsidx
+
+# Arquivos de configuração sensíveis
+appsettings.Development.json
+EM.Web.csproj.user
+
+# Arquivos temporários
+[Tt]emp/
+[Tt]mp/
+*.tmp
+*.temp
+
+# Logs
+[Ll]og/
+[Ll]ogs/
+*.log
+
+# NuGet
+packages/
+*.nupkg
+.nuget/
+NuGet.exe
+
+# Publish
+publish/

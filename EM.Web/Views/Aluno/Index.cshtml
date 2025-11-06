@@ -1,0 +1,241 @@
+@model IEnumerable<Em.Web.Models.AlunoViewModel>
+
+@{
+    ViewData["Title"] = "Lista de Alunos";
+}
+
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h1 class="display-6 text-primary fw-bold">
+            <i class="bi bi-people-fill me-2"></i>
+            Lista de Alunos
+        </h1>
+        <p class="text-muted mb-0">Gerencie os alunos cadastrados no sistema</p>
+    </div>
+    <div class="col-md-4 text-md-end">
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="bi bi-person-plus me-1"></i>
+            Novo Aluno
+        </a>
+        <button class="btn btn-outline-secondary" onclick="gerarRelatorio()">
+            <i class="bi bi-file-earmark-pdf me-1"></i>
+            Relatório
+        </button>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label for="searchType" class="form-label">Tipo de Busca</label>
+                <select id="searchType" class="form-select">
+                    <option value="nome">Nome</option>
+                    <option value="matricula">Matrícula</option>
+                    <option value="cidade">Cidade</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label for="searchInput" class="form-label">Buscar</label>
+                <input type="text" id="searchInput" class="form-control" placeholder="Digite o termo de busca...">
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button type="button" class="btn btn-outline-primary w-100" onclick="filtrarTabela()">
+                    <i class="bi bi-search me-1"></i>
+                    Buscar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0" id="alunosTable">
+                <thead class="table-light">
+                    <tr>
+                        <th class="border-0 fw-semibold">Matrícula</th>
+                        <th class="border-0 fw-semibold">Nome</th>
+                        <th class="border-0 fw-semibold">CPF</th>
+                        <th class="border-0 fw-semibold">Idade</th>
+                        <th class="border-0 fw-semibold">Sexo</th>
+                        <th class="border-0 fw-semibold">Cidade</th>
+                        <th class="border-0 fw-semibold">UF</th>
+                        <th class="border-0 fw-semibold text-center">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="align-middle">
+                                    <span class="badge bg-primary">@item.Matricula</span>
+                                </td>
+                                <td class="align-middle fw-medium">@item.Nome</td>
+                                <td class="align-middle">@item.CPFFormatado</td>
+                                <td class="align-middle">
+                                    <span class="badge bg-secondary">@item.Idade anos</span>
+                                </td>
+                                <td class="align-middle">
+                                    @if (item.Sexo == EM.Domain.EnumeradorSexo.Masculino)
+                                    {
+                                        <span class="badge bg-info">M</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-warning">F</span>
+                                    }
+                                </td>
+                                <td class="align-middle">
+                                    @if (!string.IsNullOrEmpty(item.CidadeNome))
+                                    {
+                                        <span class="badge bg-success">@item.CidadeNome</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-light text-dark">Não informada</span>
+                                    }
+                                </td>
+                                <td class="align-middle">
+                                    @if (!string.IsNullOrEmpty(item.UF))
+                                    {
+                                        <span class="badge bg-dark">@item.UF</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-light text-dark">--</span>
+                                    }
+                                </td>
+                                <td class="align-middle text-center">
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <a asp-action="Edit" asp-route-id="@item.Matricula" class="btn btn-outline-primary" title="Editar">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@item.Matricula" class="btn btn-outline-danger btn-excluir"
+                                           data-nome="@item.Nome" title="Excluir">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="8" class="text-center py-4 text-muted">
+                                <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                                <p>Nenhum aluno encontrado</p>
+                                <a asp-action="Create" class="btn btn-primary btn-sm">
+                                    <i class="bi bi-person-plus me-1"></i>
+                                    Cadastrar Primeiro Aluno
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function filtrarTabela() {
+            var searchType = document.getElementById('searchType').value;
+            var searchInput = document.getElementById('searchInput').value.toLowerCase();
+            var table = document.getElementById('alunosTable');
+            var rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+
+            for (var i = 0; i < rows.length; i++) {
+                var cells = rows[i].getElementsByTagName('td');
+                var shouldShow = false;
+
+                if (searchInput === '') {
+                    shouldShow = true;
+                } else {
+                    if (searchType === 'nome' && cells[1]) {
+                        var nome = cells[1].textContent.toLowerCase();
+                        shouldShow = nome.includes(searchInput);
+                    } else if (searchType === 'matricula' && cells[0]) {
+                        var matricula = cells[0].textContent.toLowerCase();
+                        shouldShow = matricula.includes(searchInput);
+                    } else if (searchType === 'cidade' && cells[5]) {
+                        var cidade = cells[5].textContent.toLowerCase();
+                        shouldShow = cidade.includes(searchInput);
+                    }
+                }
+
+                rows[i].style.display = shouldShow ? '' : 'none';
+            }
+        }
+
+        async function gerarRelatorio() {
+            const btn = event?.currentTarget || document.querySelector('button[onclick="gerarRelatorio()"]');
+            const originalHtml = btn ? btn.innerHTML : null;
+            try {
+                if (btn) {
+                    btn.disabled = true;
+                    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>Gerando...';
+                }
+
+                const searchType = document.getElementById('searchType').value;
+                const searchValue = document.getElementById('searchInput').value;
+                const format = 'csv'; // padrão
+
+                const params = new URLSearchParams({ searchType, searchValue, format });
+                const resp = await fetch(`/Aluno/Report?${params.toString()}`);
+
+                if (!resp.ok) {
+                    const msg = await resp.text();
+                    alert(`Erro ao gerar relatório: ${msg}`);
+                    return;
+                }
+
+                const blob = await resp.blob();
+                const dispo = resp.headers.get('Content-Disposition') || '';
+                const nomeMatch = dispo.match(/filename="?([^";]+)"?/i);
+                const fileName = nomeMatch ? nomeMatch[1] : `Relatorio_Alunos_${new Date().toISOString().slice(0,19).replace(/[:T]/g,'')}.csv`;
+
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = fileName;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+            } catch (err) {
+                alert(`Falha inesperada ao emitir relatório: ${err}`);
+            } finally {
+                if (btn && originalHtml) {
+                    btn.disabled = false;
+                    btn.innerHTML = originalHtml;
+                }
+            }
+        }
+
+        // Busca em tempo real
+        document.getElementById('searchInput').addEventListener('keyup', function(e) {
+            if (e.key === 'Enter') {
+                filtrarTabela();
+            }
+        });
+
+        // Adiciona animação de fade nos botões de ação
+        $(document).ready(function() {
+            $('.btn-excluir').on('click', function(e) {
+                e.preventDefault();
+                var nome = $(this).data('nome');
+                var url = $(this).attr('href');
+
+                if (confirm('Tem certeza que deseja excluir o aluno "' + nome + '"? Esta ação não pode ser desfeita.')) {
+                    window.location.href = url;
+                }
+            });
+        });
+    </script>
+}

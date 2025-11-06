@@ -1,0 +1,265 @@
+@model Em.Web.Models.AlunoViewModel
+
+@{
+    ViewData["Title"] = Model.Matricula == 0 ? "Adicionar Aluno" : "Editar Aluno";
+    var isEdit = Model.Matricula > 0;
+}
+
+<div class="row mb-4">
+    <div class="col-12">
+        <h1 class="display-6 text-primary fw-bold">
+            <i class="bi bi-person-plus-fill me-2"></i>
+            @ViewData["Title"]
+        </h1>
+        <p class="text-muted mb-0">Preencha os dados do aluno</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+                <form asp-action="@(isEdit ? "Edit" : "Create")" method="post" id="alunoForm">
+                    @if (isEdit)
+                    {
+                        <input type="hidden" asp-for="Matricula" />
+                    }
+                    
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                            <label asp-for="Nome" class="form-label fw-semibold">
+                                Nome Completo <span class="text-danger">*</span>
+                            </label>
+                            <input asp-for="Nome" class="form-control" placeholder="Digite o nome completo do aluno" />
+                            <span asp-validation-for="Nome" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <label asp-for="CPF" class="form-label fw-semibold">CPF</label>
+                            <input asp-for="CPF" class="form-control cpf-mask" placeholder="000.000.000-00" />
+                            <span asp-validation-for="CPF" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mt-1">
+                        <div class="col-md-4">
+                            <label asp-for="Nascimento" class="form-label fw-semibold">
+                                Data de Nascimento <span class="text-danger">*</span>
+                            </label>
+                            <input asp-for="Nascimento" type="date" class="form-control" />
+                            <span asp-validation-for="Nascimento" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <label asp-for="Sexo" class="form-label fw-semibold">
+                                Sexo <span class="text-danger">*</span>
+                            </label>
+                            <div class="d-flex gap-3 mt-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" asp-for="Sexo" value="@EM.Domain.EnumeradorSexo.Masculino" id="sexoMasculino">
+                                    <label class="form-check-label" for="sexoMasculino">
+                                        Masculino
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" asp-for="Sexo" value="@EM.Domain.EnumeradorSexo.Feminino" id="sexoFeminino">
+                                    <label class="form-check-label" for="sexoFeminino">
+                                        Feminino
+                                    </label>
+                                </div>
+                            </div>
+                            <span asp-validation-for="Sexo" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <label asp-for="CidadeCodigo" class="form-label fw-semibold">
+                                Cidade <span class="text-danger">*</span>
+                            </label>
+                            <select asp-for="CidadeCodigo" class="form-select" asp-items='ViewBag.Cidades != null ? new SelectList(ViewBag.Cidades, "Codigo", "Nome", Model.CidadeCodigo) : new SelectList(new List<SelectListItem>())'>
+                                <option value="">Selecione uma cidade...</option>
+                            </select>
+                            <span asp-validation-for="CidadeCodigo" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="d-flex gap-2 justify-content-end">
+                                <a asp-action="Index" class="btn btn-outline-secondary">
+                                    <i class="bi bi-arrow-left me-1"></i>
+                                    Voltar
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-check-circle me-1"></i>
+                                    @(isEdit ? "Atualizar" : "Cadastrar")
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-light">
+                <h6 class="mb-0 fw-semibold">
+                    <i class="bi bi-info-circle me-2"></i>
+                    Informações Importantes
+                </h6>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-2">
+                        <i class="bi bi-check-circle text-success me-2"></i>
+                        <small>Campos marcados com <span class="text-danger">*</span> são obrigatórios</small>
+                    </li>
+                    <li class="mb-2">
+                        <i class="bi bi-check-circle text-success me-2"></i>
+                        <small>CPF deve ser válido e único no sistema</small>
+                    </li>
+                    <li class="mb-2">
+                        <i class="bi bi-check-circle text-success me-2"></i>
+                        <small>Nome deve ter entre 3 e 100 caracteres</small>
+                    </li>
+                    <li class="mb-2">
+                        <i class="bi bi-check-circle text-success me-2"></i>
+                        <small>Data de nascimento deve ser válida</small>
+                    </li>
+                    <li class="mb-0">
+                        <i class="bi bi-check-circle text-success me-2"></i>
+                        <small>Cidade deve ser selecionada da lista</small>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        @if (isEdit)
+        {
+            <div class="card border-0 shadow-sm mt-3">
+                <div class="card-header bg-light">
+                    <h6 class="mb-0 fw-semibold">
+                        <i class="bi bi-person-badge me-2"></i>
+                        Dados do Aluno
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-2">
+                        <small class="text-muted">Matrícula:</small>
+                        <div class="fw-semibold">@Model.Matricula</div>
+                    </div>
+                    <div class="mb-2">
+                        <small class="text-muted">Idade:</small>
+                        <div class="fw-semibold">@Model.Idade anos</div>
+                    </div>
+                    <div class="mb-0">
+                        <small class="text-muted">Sexo:</small>
+                        <div class="fw-semibold">@Model.SexoDescricao</div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    
+    <script>
+        $(document).ready(function() {
+            // Validação de CPF em tempo real
+            $('#CPF').on('blur', function() {
+                var cpf = $(this).val().replace(/\D/g, '');
+                if (cpf.length === 11) {
+                    if (!validarCPF(cpf)) {
+                        $(this).addClass('is-invalid');
+                        if (!$('#CPF-error').length) {
+                            $(this).after('<span id="CPF-error" class="text-danger">CPF inválido</span>');
+                        }
+                    } else {
+                        $(this).removeClass('is-invalid');
+                        $('#CPF-error').remove();
+                    }
+                }
+            });
+            
+            // Validação de idade
+            $('#Nascimento').on('change', function() {
+                var dataNascimento = new Date($(this).val());
+                var hoje = new Date();
+                var idade = hoje.getFullYear() - dataNascimento.getFullYear();
+                var mes = hoje.getMonth() - dataNascimento.getMonth();
+                
+                if (mes < 0 || (mes === 0 && hoje.getDate() < dataNascimento.getDate())) {
+                    idade--;
+                }
+                
+                if (idade < 3 || idade > 120) {
+                    $(this).addClass('is-invalid');
+                    if (!$('#Nascimento-error-idade').length) {
+                        $(this).after('<span id="Nascimento-error-idade" class="text-danger">Idade deve estar entre 3 e 120 anos</span>');
+                    }
+                } else {
+                    $(this).removeClass('is-invalid');
+                    $('#Nascimento-error-idade').remove();
+                }
+            });
+            
+            // Validação de nome
+            $('#Nome').on('blur', function() {
+                var nome = $(this).val().trim();
+                if (nome.length < 3 || nome.length > 100) {
+                    $(this).addClass('is-invalid');
+                } else {
+                    $(this).removeClass('is-invalid');
+                }
+            });
+        });
+        
+        function validarCPF(cpf) {
+            if (cpf.length !== 11 || /^\d{11}$/.test(cpf) === false) {
+                return false;
+            }
+            
+            // Elimina CPFs invalidos conhecidos
+            if (cpf === "00000000000" || cpf === "11111111111" || 
+                cpf === "22222222222" || cpf === "33333333333" || 
+                cpf === "44444444444" || cpf === "55555555555" || 
+                cpf === "66666666666" || cpf === "77777777777" || 
+                cpf === "88888888888" || cpf === "99999999999") {
+                return false;
+            }
+            
+            // Valida 1o digito
+            var add = 0;
+            for (var i = 0; i < 9; i++) {
+                add += parseInt(cpf.charAt(i)) * (10 - i);
+            }
+            var rev = 11 - (add % 11);
+            if (rev === 10 || rev === 11) {
+                rev = 0;
+            }
+            if (rev !== parseInt(cpf.charAt(9))) {
+                return false;
+            }
+            
+            // Valida 2o digito
+            add = 0;
+            for (var i = 0; i < 10; i++) {
+                add += parseInt(cpf.charAt(i)) * (11 - i);
+            }
+            rev = 11 - (add % 11);
+            if (rev === 10 || rev === 11) {
+                rev = 0;
+            }
+            if (rev !== parseInt(cpf.charAt(10))) {
+                return false;
+            }
+            
+            return true;
+        }
+    </script>
+}

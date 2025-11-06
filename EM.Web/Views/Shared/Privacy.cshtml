@@ -1,0 +1,110 @@
+@{
+    ViewData["Title"] = "Política de Privacidade";
+}
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+                <h1 class="display-6 text-primary fw-bold mb-4">
+                    <i class="bi bi-shield-lock-fill me-2"></i>
+                    @ViewData["Title"]
+                </h1>
+                
+                <div class="mb-4">
+                    <h5 class="fw-semibold text-secondary">Última atualização: @DateTime.Now.ToString("dd/MM/yyyy")</h5>
+                </div>
+
+                <div class="mb-4">
+                    <h4 class="fw-semibold mb-3">Informações Coletadas</h4>
+                    <p class="text-muted">
+                        Nosso sistema de cadastro escolar coleta informações básicas necessárias para o funcionamento 
+                        do sistema educacional, incluindo dados de alunos e cidades.
+                    </p>
+                </div>
+
+                <div class="mb-4">
+                    <h4 class="fw-semibold mb-3">Uso das Informações</h4>
+                    <p class="text-muted">
+                        As informações coletadas são utilizadas exclusivamente para fins administrativos e educacionais, 
+                        garantindo o melhor funcionamento do sistema de gestão escolar.
+                    </p>
+                </div>
+
+                <div class="mb-4">
+                    <h4 class="fw-semibold mb-3">Segurança dos Dados</h4>
+                    <p class="text-muted">
+                        Implementamos medidas de segurança apropriadas para proteger suas informações pessoais 
+                        contra acesso não autorizado, alteração, divulgação ou destruição.
+                    </p>
+                </div>
+
+                <div class="mb-4">
+                    <h4 class="fw-semibold mb-3">Seus Direitos</h4>
+                    <p class="text-muted">
+                        Você tem o direito de solicitar informações sobre os dados pessoais que mantemos sobre você 
+                        e solicitar correções quando necessário.
+                    </p>
+                </div>
+
+                <div class="alert alert-info" role="alert">
+                    <h5 class="alert-heading">
+                        <i class="bi bi-info-circle me-2"></i>
+                        Contato
+                    </h5>
+                    <p class="mb-0">
+                        Para dúvidas sobre nossa política de privacidade, entre em contato conosco através 
+                        do e-mail: <strong>contato@escola.edu.br</strong>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm mb-3">
+            <div class="card-header bg-light">
+                <h6 class="mb-0 fw-semibold">
+                    <i class="bi bi-shield-check me-2"></i>
+                    Compromisso com a Privacidade
+                </h6>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-2">
+                        <i class="bi bi-check-circle text-success me-2"></i>
+                        <small>Proteção de dados pessoais</small>
+                    </li>
+                    <li class="mb-2">
+                        <i class="bi bi-check-circle text-success me-2"></i>
+                        <small>Uso responsável das informações</small>
+                    </li>
+                    <li class="mb-2">
+                        <i class="bi bi-check-circle text-success me-2"></i>
+                        <small>Transparência nas operações</small>
+                    </li>
+                    <li class="mb-0">
+                        <i class="bi bi-check-circle text-success me-2"></i>
+                        <small>Conformidade com regulamentações</small>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-light">
+                <h6 class="mb-0 fw-semibold">
+                    <i class="bi bi-clock me-2"></i>
+                    Atualizações
+                </h6>
+            </div>
+            <div class="card-body">
+                <p class="text-muted small mb-0">
+                    Esta política de privacidade pode ser atualizada periodicamente. 
+                    Recomendamos que você revise esta página regularmente para estar 
+                    ciente de quaisquer alterações.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
