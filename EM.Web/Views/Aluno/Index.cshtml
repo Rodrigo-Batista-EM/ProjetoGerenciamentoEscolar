@@ -209,7 +209,7 @@
             }
         }
 
-        async function gerarRelatorio() {
+        function gerarRelatorio() {
             const btn = event?.currentTarget || document.querySelector('button[onclick="gerarRelatorio()"]');
             const originalHtml = btn ? btn.innerHTML : null;
             try {
@@ -220,30 +220,9 @@
 
                 const searchType = document.getElementById('searchType').value;
                 const searchValue = document.getElementById('searchInput').value;
-                const format = 'csv';
-
-                const params = new URLSearchParams({ searchType, searchValue, format });
-                const resp = await fetch(`/Aluno/Report?${params.toString()}`);
-
-                if (!resp.ok) {
-                    const msg = await resp.text();
-                    alert(`Erro ao gerar relatório: ${msg}`);
-                    return;
-                }
-
-                const blob = await resp.blob();
-                const dispo = resp.headers.get('Content-Disposition') || '';
-                const nomeMatch = dispo.match(/filename="?([^";]+)"?/i);
-                const fileName = nomeMatch ? nomeMatch[1] : `Relatorio_Alunos_${new Date().toISOString().slice(0,19).replace(/[:T]/g,'')}.csv`;
-
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = fileName;
-                document.body.appendChild(a);
-                a.click();
-                a.remove();
-                window.URL.revokeObjectURL(url);
+                const params = new URLSearchParams({ searchType, searchValue });
+                const url = `/Relatorio/AlunosPDF?${params.toString()}`;
+                window.open(url, '_blank');
             } catch (err) {
                 alert(`Falha inesperada ao emitir relatório: ${err}`);
             } finally {

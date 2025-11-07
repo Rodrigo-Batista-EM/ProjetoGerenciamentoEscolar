@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
 		<Nullable>enable</Nullable>
@@ -8,5 +8,10 @@
 	<ItemGroup>
 		<ProjectReference Include="..\EM.Domain\EM.Domain.csproj" />
 		<ProjectReference Include="..\EM.Repository\EM.Repository.csproj" />
-	</ItemGroup>
+</ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="itext7" Version="8.0.2" />
+    <PackageReference Include="itext7.bouncy-castle-adapter" Version="8.0.2" />
+  </ItemGroup>
 </Project>

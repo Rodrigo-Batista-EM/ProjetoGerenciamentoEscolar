@@ -1,12 +1,21 @@
 using System.Globalization;
 using EM.Repository.Banco;
 using Microsoft.AspNetCore.Localization;
+using EM.Web.Interfaces;
+using EM.Web.Services;
+using EM.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// iText 8 requer especificar o adapter de Bouncy Castle
+Environment.SetEnvironmentVariable("ITEXT_BOUNCY_CASTLE_FACTORY_NAME", "bouncy-castle");
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+builder.Services.AddScoped<IRelatorioService, RelatorioService>();
+builder.Services.AddScoped<RepositorioAluno>();
+builder.Services.AddScoped<RepositorioCidade>();
 
 // Configure database connection
 DBHelper.Configure(builder.Configuration.GetConnectionString("FirebirdConnection"));

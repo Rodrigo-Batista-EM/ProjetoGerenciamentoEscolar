@@ -1,9 +1,3 @@
-# Banco de dados Firebird - NÃO SUBIR
-*.fdb
-*.FDB
-*.gdb
-*.GDB
-
 # Arquivos de compilação do .NET
 bin/
 obj/
