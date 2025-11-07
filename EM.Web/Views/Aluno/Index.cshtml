@@ -114,10 +114,10 @@
                                         <a asp-action="Edit" asp-route-id="@item.Matricula" class="btn btn-outline-primary" title="Editar">
                                             <i class="bi bi-pencil"></i>
                                         </a>
-                                        <a asp-action="Delete" asp-route-id="@item.Matricula" class="btn btn-outline-danger btn-excluir"
-                                           data-nome="@item.Nome" title="Excluir">
+                                        <button type="button" class="btn btn-outline-danger" title="Excluir"
+                                                onclick="confirmarExclusao('@item.Matricula', '@item.Nome')">
                                             <i class="bi bi-trash"></i>
-                                        </a>
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -138,12 +138,48 @@
                     }
                 </tbody>
             </table>
+</div>
+</div>
+</div>
+
+<!-- Modal de Confirmação -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="confirmDeleteModalLabel">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    Confirmar Exclusão
+                </h5>
+            </div>
+            <div class="modal-body">
+                <p>Tem certeza que deseja excluir o aluno <strong id="alunoNome"></strong>?</p>
+                <p class="text-muted mb-0">Esta ação não pode ser desfeita.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x-circle me-1"></i>
+                    Cancelar
+                </button>
+                <form id="deleteForm" method="post" style="display: inline;">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-trash me-1"></i>
+                        Excluir
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 </div>
 
 @section Scripts {
     <script>
+        function confirmarExclusao(matricula, nome) {
+            $('#alunoNome').text(nome);
+            $('#deleteForm').attr('action', '/Aluno/Delete/' + matricula);
+            $('#confirmDeleteModal').modal('show');
+        }
         function filtrarTabela() {
             var searchType = document.getElementById('searchType').value;
             var searchInput = document.getElementById('searchInput').value.toLowerCase();
@@ -184,7 +220,7 @@
 
                 const searchType = document.getElementById('searchType').value;
                 const searchValue = document.getElementById('searchInput').value;
-                const format = 'csv'; // padrão
+                const format = 'csv';
 
                 const params = new URLSearchParams({ searchType, searchValue, format });
                 const resp = await fetch(`/Aluno/Report?${params.toString()}`);
@@ -223,19 +259,6 @@
             if (e.key === 'Enter') {
                 filtrarTabela();
             }
-        });
-
-        // Adiciona animação de fade nos botões de ação
-        $(document).ready(function() {
-            $('.btn-excluir').on('click', function(e) {
-                e.preventDefault();
-                var nome = $(this).data('nome');
-                var url = $(this).attr('href');
-
-                if (confirm('Tem certeza que deseja excluir o aluno "' + nome + '"? Esta ação não pode ser desfeita.')) {
-                    window.location.href = url;
-                }
-            });
         });
     </script>
 }

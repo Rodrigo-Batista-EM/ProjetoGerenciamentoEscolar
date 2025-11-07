@@ -21,6 +21,7 @@ namespace EM.Web.Controllers
         public IActionResult Index()
         {
             var alunos = _repositorioAluno.GetAll()
+                .Select(PreencherCidade)
                 .Select(a => new AlunoViewModel
                 {
                     Matricula = a.Matricula,
@@ -405,7 +406,9 @@ namespace EM.Web.Controllers
                     _ => _repositorioAluno.GetByConteudoNoNome(searchValue)
                 };
 
-                var model = alunos.Select(a => new AlunoViewModel
+                var model = alunos
+                    .Select(PreencherCidade)
+                    .Select(a => new AlunoViewModel
                 {
                     Matricula = a.Matricula,
                     Nome = a.Nome,
