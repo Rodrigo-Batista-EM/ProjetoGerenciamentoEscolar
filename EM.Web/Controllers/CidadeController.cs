@@ -1,4 +1,4 @@
-﻿using Em.Web.Models;
+using Em.Web.Models;
 using EM.Domain;
 using EM.Domain.Utilitarios;
 using EM.Repository;
@@ -19,7 +19,7 @@ namespace EM.Web.Controllers
 
         public IActionResult Index()
         {
-            var cidades = _repositorioCidade.GetAll()
+            var cidades = _repositorioCidade.GetAll().OrderBy(c => c.Codigo)
                 .Select(c => new CidadeViewModel
                 {
                     Codigo = c.Codigo,

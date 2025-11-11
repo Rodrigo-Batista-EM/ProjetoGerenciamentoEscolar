@@ -20,7 +20,7 @@ namespace EM.Web.Controllers
         // GET: Aluno
         public IActionResult Index()
         {
-            var alunos = _repositorioAluno.GetAll()
+            var alunos = _repositorioAluno.GetAll().OrderBy(a => a.Matricula)
                 .Select(PreencherCidade)
                 .Select(a => new AlunoViewModel
                 {
